@@ -28,7 +28,7 @@ class LoginForm extends React.Component {
             .then(res => {
                 console.log(res);
                 localStorage.setItem("token", res.data.payload)
-                this.props.history.push("/protected")
+                this.props.history.push("/login/addfriend/protected")
             })
             .catch(err => console.log({ err }))
     };
@@ -58,7 +58,7 @@ class LoginForm extends React.Component {
                         />
                     </label>
                     <br></br>
-                    <button>Login</button>
+                    <button path="/login/addfriend/protected">Login</button>
                 </form>
             </div>
         )
