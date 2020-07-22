@@ -1,46 +1,67 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { axiosWithAuth } from '../axiosAuth';
+import { axiosWithAuth } from '../utilis/axiosWithAuth';
 
 
-class FriendForm extends React.Component {
-    state = {
-        friends: [
-            {
-            id: new Date(),
-            name: '',
-            age: '',
-            email: ''
-            }
-        ]
-    };
+function FriendForm() {
+    
+    let initialState = {
+        name: "",
+        age: "",
+        email: ""
+    }
 
-    handleChange = e => {
-        this.setState({
-            friends: {
-                ...this.state.friends,
-                [e.target.name]: e.target.value
-            }
+    const [ newFriend, setNewFriend ] = useState(initialState)
+
+    // const handleChange = e => {
+    //     setNewFriend({
+    //         name: e.target.value,
+    //         age: e.target.value,
+    //         email: e.target.value
+    //     })
+    // }
+
+    const handleChange = e => {
+        setNewFriend({
+            ...newFriend,
+            [e.target.name]: e.target.value
         })
     }
 
-    // addFriend = e => {
+    const addFriend = e => {
+        e.preventDefault();
+        axiosWithAuth()
+        .post("/friends", {
+            name: newFriend.name,
+            age: newFriend.age,
+            email: newFriend.email
+        })
+        .then(res => {
+            console.log(res.data)
+        })
+        .catch(err => console.log({ err }))
+    }
+
+    // const addFriend = e => {
     //     e.preventDefault();
-    //     axiosWithAuth();
-    //     .post("/friends", this.state.)
+    //     axiosWithAuth()
+    //     .post("/friends", newFriend)
+    //     .then(res => {
+    //         console.log(res.data)
+    //     })
+    //     .catch(err => console.log({ err }))
     // }
 
-    render() {
         return (
             <div>
                 <h1>Add A New Friend Below!</h1>
-                <form onSubmit={this.addFriend}>
+                <form onSubmit={addFriend}>
                     <label>Name -:-
                         <input 
                             type="text"
                             name="name"
-                            value={this.state.friends.name}
-                            onChange={this.handleChange}
+                            value={newFriend.name}
+                            onChange={handleChange}
                         />
                     </label>
                     <br></br>
@@ -48,8 +69,8 @@ class FriendForm extends React.Component {
                         <input 
                             type="text"
                             name="age"
-                            value={this.state.friends.age}
-                            onChange={this.handleChange}
+                            value={newFriend.age}
+                            onChange={handleChange}
                         />
                     </label>
                     <br></br>
@@ -57,8 +78,8 @@ class FriendForm extends React.Component {
                         <input 
                             type="email"
                             name="email"
-                            value={this.state.friends.email}
-                            onChange={this.handleChange}
+                            value={newFriend.email}
+                            onChange={handleChange}
                         />
                     </label>
                     <br></br>
@@ -69,7 +90,6 @@ class FriendForm extends React.Component {
                 </div>
             </div>
         )
-    };
 }
 
 export default FriendForm;
